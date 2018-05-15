@@ -46,12 +46,16 @@ message StreamingRecognitionConfig {
 
   // 如果设置成true, 当检测到语音流中没有人说话后,
   // 会返回END_OF_SINGLE_UTTERANCE, 并
-  // 停止识别. 默认(或者不设置)值为false.
-  bool silence_detection = 2;
+  // 停止识别, 必须指定静音检测配置.
+  // 默认(或者不设置)值为false.
+  bool endpoint_detection = 2;
 
   // 如果设置成true, 会在识别过程中试试返回已识别的结果.
   // 默认(或者不设置)值为false.
   bool partial_result = 3;
+
+  // 静音检测设置
+  EndpointConfig endpoint_config = 4;
 }
 
 // 语音识别结果
@@ -138,6 +142,15 @@ message RecognitionConfig {
 message RecognitionAudio {
   // *必须* 音频数据.
   bytes content = 1;
+}
+
+// 断点检测参数
+message EndpointConfig {
+  // 开始静音时长(从音频输入开始经历start_silence秒无人说话, 则返回静音事件)
+  float start_silence = 1;
+
+  // 结束静音时长(当输入音频中说话人停止说话end_silence秒, 则返回静音事件)
+  float end_silence = 2;
 }
 
 // 识别错误
